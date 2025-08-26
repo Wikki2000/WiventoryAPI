@@ -1,0 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace WiventoryAPI.DTOs
+{
+    public class CreateUserResponseDto
+    {
+        public string Message { get; set; }
+    }
+}

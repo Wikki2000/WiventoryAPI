@@ -1,0 +1,48 @@
+using System;
+using System.Threading.Tasks;
+using MailKit.Net.Smtp;
+using MimeKit;
+
+namespace api.src.Services
+{
+    public interface IEmailService
+    {
+        Task<bool> SendEmailAsync(string senderEmail, string appPassword, string recipient, string subject, string body, string mailType = "html");
+    }
+
+    public class EmailService : IEmailService
+    {
+        public async Task<bool> SendEmailAsync(string senderEmail, string appPassword, string recipient, string subject, string body, string mailType = "html")
+        {
+            try
+            {
+                var message = new MimeMessage();
+                message.From.Add(MailboxAddress.Parse(senderEmail));
+                message.To.Add(MailboxAddress.Parse(recipient));
+                message.Subject = subject;
+
+                if (mailType.ToLower() == "html")
+                {
+                    message.Body = new TextPart("html") { Text = body };
+                }
+                else
+                {
+                    message.Body = new TextPart("plain") { Text = body };
+                }
+
+                using var client = new SmtpClient();
+                await client.ConnectAsync("smtp.zoho.com", 465, true); // SSL
+                await client.AuthenticateAsync(senderEmail, appPassword);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Zoho Mail Send Error: {ex.Message}");
+                return false;
+            }
+        }
+    }
+}

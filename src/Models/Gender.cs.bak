@@ -1,0 +1,15 @@
+using System;
+
+namespace WiventoryAPI.Models
+{
+    /// <summary>
+    /// Represents the gender of a user or individual.
+    /// Using an enum ensures that only valid, predefined values are assigned,
+    /// providing type safety and avoiding invalid strings.
+    /// </summary>
+    public enum Gender
+    {
+        Male,
+        Female,
+    }
+}
